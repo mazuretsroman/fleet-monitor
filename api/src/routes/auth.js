@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { config } from '../config.js';
 import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const loginSchema = z.object({
   email: z.string().trim().toLowerCase().min(1),
@@ -43,4 +44,8 @@ authRouter.post('/login', async (req, res) => {
   );
 
   res.json({ token });
+});
+
+authRouter.get('/me', requireAuth, (req, res) => {
+  res.json({ user: req.user });
 });
