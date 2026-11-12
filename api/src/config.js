@@ -9,6 +9,7 @@ const schema = z.object({
   REDIS_URL: z.string().url(),
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('1h'),
+  CORS_ORIGIN: z.string().url().default('http://localhost:5173'),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -28,4 +29,5 @@ export const config = {
   redisUrl: parsed.data.REDIS_URL,
   jwtSecret: parsed.data.JWT_SECRET,
   jwtExpiresIn: parsed.data.JWT_EXPIRES_IN,
+  corsOrigin: parsed.data.CORS_ORIGIN,
 };
