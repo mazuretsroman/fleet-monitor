@@ -4,6 +4,7 @@ const ROBOT_COLUMNS = 'id, name, status, lat, lon, updated_at';
 const DEFAULT_CENTER = { lat: 51.3397, lon: 12.3731 };
 const DEFAULT_SPREAD = 0.02;
 const UNIQUE_VIOLATION = '23505';
+const MOVE_STEP = 0.001;
 
 export class RobotNameTakenError extends Error {}
 
@@ -48,6 +49,47 @@ export async function createRobot({ name, lat, lon }) {
     if (error.code === UNIQUE_VIOLATION) {
       throw new RobotNameTakenError();
     }
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+export async function moveRobot(id) {
+  const client = await pool.connect();
+
+  try {
+    await client.query('begin');
+
+    const current = await client.query(
+      'select lat, lon from robots where id = $1 for update',
+      [id],
+    );
+    if (current.rows.length === 0) {
+      await client.query('rollback');
+      return null;
+    }
+
+    const lat = randomAround(current.rows[0].lat, MOVE_STEP);
+    const lon = randomAround(current.rows[0].lon, MOVE_STEP);
+
+    const { rows } = await client.query(
+      `update robots
+      set lat = $2, lon = $3, status = 'moving', updated_at = now()
+      where id = $1
+      returning ${ROBOT_COLUMNS}`,
+      [id, lat, lon],
+    );
+
+    await client.query(
+      'insert into robot_positions (robot_id, lat, lon) values ($1, $2, $3)',
+      [id, lat, lon],
+    );
+
+    await client.query('commit');
+    return rows[0];
+  } catch (error) {
+    await client.query('rollback');
     throw error;
   } finally {
     client.release();
