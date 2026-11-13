@@ -8,3 +8,70 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
 }
+
+h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  background: #1d4ed8;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background: #f3f4f6;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 20rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+}
+
+.login-form h1 {
+  margin-bottom: 0.5rem;
+}
+
+.login-form input {
+  padding: 0.5rem;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.login-form button {
+  margin-top: 0.5rem;
+}
+
+.form-error {
+  margin: 0;
+  color: #b91c1c;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
