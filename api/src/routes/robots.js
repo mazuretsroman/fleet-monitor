@@ -12,6 +12,7 @@ import {
   getCachedRobots,
   setCacheRobots,
 } from '../services/robotsCache.js';
+import { broadcastRobot } from '../ws.js';
 
 const createRobotSchema = z
   .object({
@@ -69,5 +70,6 @@ robotsRouter.post('/:id/move', async (req, res) => {
     return res.status(404).json({ error: 'Robot not found.' });
   }
 
+  broadcastRobot(robot);
   res.json({ robot });
 });
