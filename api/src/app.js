@@ -3,6 +3,7 @@ import express from 'express';
 import { config } from './config.js';
 import { errorHandler, notFound } from './middleware/errors.js';
 import { authRouter } from './routes/auth.js';
+import { robotsRouter } from './routes/robots.js';
 
 export const app = express();
 
@@ -15,6 +16,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/robots', robotsRouter);
 
 app.use(notFound);
 app.use(errorHandler);
