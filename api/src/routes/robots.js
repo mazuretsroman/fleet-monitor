@@ -7,12 +7,12 @@ import {
   moveRobot,
   RobotNameTakenError,
 } from '../services/robots.js';
+import { publishRobot } from '../services/robotEvents.js';
 import {
   clearRobotsCache,
   getCachedRobots,
   setCacheRobots,
 } from '../services/robotsCache.js';
-import { broadcastRobot } from '../ws.js';
 
 const createRobotSchema = z
   .object({
@@ -50,6 +50,7 @@ robotsRouter.post('/', async (req, res) => {
   try {
     const robot = await createRobot(parsed.data);
     await clearRobotsCache();
+    await publishRobot(robot);
     res.status(201).json({ robot });
   } catch (error) {
     if (error instanceof RobotNameTakenError) {
@@ -70,6 +71,6 @@ robotsRouter.post('/:id/move', async (req, res) => {
     return res.status(404).json({ error: 'Robot not found.' });
   }
 
-  broadcastRobot(robot);
+  await publishRobot(robot);
   res.json({ robot });
 });

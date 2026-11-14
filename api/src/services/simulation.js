@@ -1,5 +1,5 @@
-import { broadcastRobot } from '../ws.js';
 import { listRobots, moveRobot } from './robots.js';
+import { publishRobot } from './robotEvents.js';
 
 const INTERVAL_MS = 2000;
 
@@ -9,7 +9,7 @@ async function tick() {
   for (const { id } of robots) {
     const robot = await moveRobot(id);
 
-    if (robot) broadcastRobot(robot);
+    if (robot) await publishRobot(robot);
   }
 }
 

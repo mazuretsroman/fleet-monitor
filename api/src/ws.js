@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { WebSocketServer } from 'ws';
 import { config } from './config.js';
+import { subscribeToRobots } from './services/robotEvents.js';
 
 const AUTH_TIMEOUT_MS = 5000;
 const UNAUTHORIZED = 4401;
@@ -22,6 +23,7 @@ function isValidAuthMessage(data) {
 
 export function attachWebSocket(server) {
   const wss = new WebSocketServer({ server, path: '/ws' });
+  subscribeToRobots(broadcastRobot);
 
   wss.on('connection', (socket) => {
     const authTimer = setTimeout(() => {
@@ -50,7 +52,7 @@ export function attachWebSocket(server) {
   });
 }
 
-export function broadcastRobot(robot) {
+function broadcastRobot(robot) {
   const message = JSON.stringify({ type: 'robot.updated', robot });
 
   for (const socket of clients) {
