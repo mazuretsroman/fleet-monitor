@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { apiRequest } from '../api.js';
 import { AuthContext } from './AuthContext.js';
 
@@ -17,10 +17,12 @@ export function AuthProvider({ children }) {
     setToken(data.token);
   }
 
-  function logout() {
+  // useCallback keeps the same function between renders, so effects
+  // that depend on logout do not re-run on every render
+  const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     setToken(null);
-  }
+  }, []);
 
   return <AuthContext value={{ token, login, logout }}>{children}</AuthContext>;
 }

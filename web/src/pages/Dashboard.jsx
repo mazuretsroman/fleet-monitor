@@ -1,16 +1,75 @@
+import { useEffect, useState } from 'react';
+import { ApiError, apiRequest } from '../api.js';
 import { useAuth } from '../auth/AuthContext.js';
+import { AddRobotForm } from '../components/AddRobotForm.jsx';
+import { RobotList } from '../components/RobotList.jsx';
 
 export function Dashboard() {
-  const { logout } = useAuth();
+  const { token, logout } = useAuth();
+  const [robots, setRobots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Ignore the response if the component was unmounted meanwhile
+    let cancelled = false;
+
+    apiRequest('/robots', { token })
+      .then((data) => {
+        if (!cancelled) {
+          setRobots(data.robots);
+        }
+      })
+      .catch((err) => {
+        if (cancelled) {
+          return;
+        }
+        if (err instanceof ApiError && err.status === 401) {
+          return logout();
+        }
+        setError('Could not load robots.');
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token, logout]);
+
+  // Adds a new robot or replaces the one with the same id
+  function upsertRobot(robot) {
+    setRobots((current) =>
+      current.some((item) => item.id === robot.id)
+        ? current.map((item) => (item.id === robot.id ? robot : item))
+        : [...current, robot],
+    );
+  }
 
   return (
-    <main className="dashboard">
+    <div className="dashboard">
       <header className="dashboard-header">
         <h1>Mini-Fleet Monitor</h1>
         <button type="button" onClick={logout}>
           Log Out
         </button>
       </header>
-    </main>
+
+      <main className="dashboard-body">
+        <aside className="sidebar">
+          <AddRobotForm onCreated={upsertRobot} />
+          {loading && <p>loading...</p>}
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          {!loading && !error && <RobotList robots={robots} />}
+        </aside>
+      </main>
+    </div>
   );
 }

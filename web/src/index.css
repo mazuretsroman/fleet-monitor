@@ -6,6 +6,8 @@
 
 body {
   margin: 0;
+  background: #fff;
+  color: #111827;
   font-family: system-ui, sans-serif;
 }
 
@@ -74,4 +76,76 @@ button:disabled {
   justify-content: space-between;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  width: 20rem;
+  padding: 1rem;
+}
+
+.add-robot {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.add-robot-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.add-robot-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid #9ca3af;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.empty {
+  margin: 0;
+  color: #6b7280;
+}
+
+.robot-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.robot-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.robot-name {
+  font-weight: 600;
+}
+
+.robot-status {
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  font-size: 0.8rem;
+}
+
+.robot-status-moving {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.robot-position {
+  grid-column: 1 / -1;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
 }
