@@ -25,7 +25,7 @@ export function attachWebSocket(server) {
 
   wss.on('connection', (socket) => {
     const authTimer = setTimeout(() => {
-      socket.close(UNAUTHORIZED, 'Authentication failed.');
+      socket.close(UNAUTHORIZED, 'Authentication timeout.');
     }, AUTH_TIMEOUT_MS);
 
     socket.once('message', (data) => {
@@ -45,7 +45,7 @@ export function attachWebSocket(server) {
     });
 
     socket.on('error', (error) => {
-      console.error('Websocket error:', error.message);
+      console.error('WebSocket error:', error.message);
     });
   });
 }

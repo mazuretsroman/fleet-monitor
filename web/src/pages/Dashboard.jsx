@@ -3,8 +3,8 @@ import { ApiError, apiRequest } from '../api.js';
 import { useAuth } from '../auth/AuthContext.js';
 import { AddRobotForm } from '../components/AddRobotForm.jsx';
 import { RobotList } from '../components/RobotList.jsx';
-import { useRobotUpdates } from '../hooks/useRobotsUpdates.js';
 import { RobotMap } from '../components/RobotMap.jsx';
+import { useRobotUpdates } from '../hooks/useRobotUpdates.js';
 
 export function Dashboard() {
   const { token, logout } = useAuth();
@@ -74,14 +74,14 @@ export function Dashboard() {
       <header className="dashboard-header">
         <h1>Mini-Fleet Monitor</h1>
         <button type="button" onClick={logout}>
-          Log Out
+          Log out
         </button>
       </header>
 
       <main className="dashboard-body">
         <aside className="sidebar">
           <AddRobotForm onCreated={upsertRobot} />
-          {loading && <p>loading...</p>}
+          {loading && <p>Loading…</p>}
           {error && (
             <p className="form-error" role="alert">
               {error}

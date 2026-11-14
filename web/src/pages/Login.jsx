@@ -18,7 +18,7 @@ export function Login() {
       await login(email, password);
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : 'Cannot reach the server',
+        err instanceof ApiError ? err.message : 'Cannot reach the server.',
       );
       setSubmitting(false);
     }
@@ -56,7 +56,7 @@ export function Login() {
         )}
 
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Signing in...' : 'Sign in'}
+          {submitting ? 'Signing in…' : 'Sign in'}
         </button>
       </form>
     </main>

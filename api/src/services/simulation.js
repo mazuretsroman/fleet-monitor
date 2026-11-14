@@ -16,7 +16,7 @@ async function tick() {
 export function startSimulation() {
   setInterval(() => {
     tick().catch((error) => {
-      console.error('Simulation tick failed.', error.message);
+      console.error('Simulation tick failed:', error.message);
     });
   }, INTERVAL_MS);
 }
