@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext.js';
 import { AddRobotForm } from '../components/AddRobotForm.jsx';
 import { RobotList } from '../components/RobotList.jsx';
 import { useRobotUpdates } from '../hooks/useRobotsUpdates.js';
+import { RobotMap } from '../components/RobotMap.jsx';
 
 export function Dashboard() {
   const { token, logout } = useAuth();
@@ -73,6 +74,7 @@ export function Dashboard() {
           )}
           {!loading && !error && <RobotList robots={robots} />}
         </aside>
+        <RobotMap robots={robots} />
       </main>
     </div>
   );

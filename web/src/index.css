@@ -78,12 +78,31 @@ button:disabled {
   border-bottom: 1px solid #e5e7eb;
 }
 
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dashboard-body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 20rem 1fr;
+  min-height: 0;
+}
+
 .sidebar {
   display: grid;
   gap: 1rem;
   align-content: start;
-  width: 20rem;
   padding: 1rem;
+  overflow-y: auto;
+  border-right: 1px solid #e5e7eb;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
 }
 
 .add-robot {
