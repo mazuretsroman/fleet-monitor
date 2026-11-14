@@ -54,6 +54,21 @@ export function Dashboard() {
 
   useRobotUpdates(token, upsertRobot, logout);
 
+  async function moveRobot(id) {
+    try {
+      const data = await apiRequest(`/robots/${id}/move`, {
+        method: 'POST',
+        token,
+      });
+      upsertRobot(data.robot);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        return logout();
+      }
+      setError('Could not move the robot.');
+    }
+  }
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -72,7 +87,9 @@ export function Dashboard() {
               {error}
             </p>
           )}
-          {!loading && !error && <RobotList robots={robots} />}
+          {!loading && !error && (
+            <RobotList robots={robots} onMove={moveRobot} />
+          )}
         </aside>
         <RobotMap robots={robots} />
       </main>

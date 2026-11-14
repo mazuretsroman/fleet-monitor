@@ -163,8 +163,16 @@ button:disabled {
 }
 
 .robot-position {
-  grid-column: 1 / -1;
+  align-self: center;
   color: #6b7280;
   font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
+}
+
+.robot-move {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid #1d4ed8;
+  background: #fff;
+  color: #1d4ed8;
+  font-size: 0.8rem;
 }
