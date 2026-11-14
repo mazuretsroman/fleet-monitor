@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ApiError, apiRequest } from '../api.js';
 import { useAuth } from '../auth/AuthContext.js';
 import { AddRobotForm } from '../components/AddRobotForm.jsx';
 import { RobotList } from '../components/RobotList.jsx';
+import { useRobotUpdates } from '../hooks/useRobotsUpdates.js';
 
 export function Dashboard() {
   const { token, logout } = useAuth();
@@ -40,14 +41,17 @@ export function Dashboard() {
     };
   }, [token, logout]);
 
-  // Adds a new robot or replaces the one with the same id
-  function upsertRobot(robot) {
+  // useCallback keeps the function stable, so the WebSocket effect
+  // does not reconnect on every render
+  const upsertRobot = useCallback((robot) => {
     setRobots((current) =>
       current.some((item) => item.id === robot.id)
         ? current.map((item) => (item.id === robot.id ? robot : item))
         : [...current, robot],
     );
-  }
+  }, []);
+
+  useRobotUpdates(token, upsertRobot, logout);
 
   return (
     <div className="dashboard">
