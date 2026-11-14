@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-robotsmoving}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-robotsmoving}
+      POSTGRES_DB: ${POSTGRES_DB:-robotsmoving}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -24,6 +24,36 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  api:
+    build: ./api
+    environment:
+      API_PORT: 3000
+      # Inside the compose network services reach each other by name
+      DATABASE_URL: postgres://${POSTGRES_USER:-robotsmoving}:${POSTGRES_PASSWORD:-robotsmoving}@db:5432/${POSTGRES_DB:-robotsmoving}
+      REDIS_URL: redis://redis:6379
+      # Demo default so that `docker compose up` works without a .env file
+      JWT_SECRET: ${JWT_SECRET:-demo-only-secret-change-me-in-real-use}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
+      CORS_ORIGIN: http://localhost:${WEB_PORT:-8080}
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./web
+      args:
+        # The browser calls the API directly, so this is the host address
+        VITE_API_URL: http://localhost:${API_PORT:-3000}
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      - api
 
 volumes:
   db_data:
